@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <cstdint>
 
 class RegionList {
 public:
