@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cstdint>
 
 RegionList::RegionList(const std::string &regionListPath) {
   ReadRegionList(regionListPath, true);
