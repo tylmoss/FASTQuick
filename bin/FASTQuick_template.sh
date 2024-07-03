@@ -326,7 +326,7 @@ if [[ $do_index == true ]] ; then
     fi
     if [[ $SVDPrefix != "" ]] && [[ "$targetRegion" == "" ]]; then
     echo "$(date)	Start indexing on target region with predfined marker set in $candidateVCF..."| tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM index \
 			--predefinedVCF $candidateVCF \
 			--dbsnpVCF $dbSNP \
@@ -336,7 +336,7 @@ if [[ $do_index == true ]] ; then
 		1>&2 2>> "$logfile"; } 1>&2 2>>"$timinglogfile"
 		elif [[ $SVDPrefix != "" ]] && [[ "$targetRegion" != "" ]] ; then
 		 echo "$(date)	Start indexing on target region with predfined marker set in $candidateVCF..."| tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM index \
 			--predefinedVCF $candidateVCF \
 			--dbsnpVCF $dbSNP \
@@ -347,7 +347,7 @@ if [[ $do_index == true ]] ; then
 		1>&2 2>> "$logfile"; } 1>&2 2>>"$timinglogfile"
 	  elif [[ "$targetRegion" == "" ]] ; then
 		echo "$(date)	Start indexing on whole genome..."| tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM index \
 			--siteVCF $candidateVCF \
 			--dbsnpVCF $dbSNP \
@@ -359,7 +359,7 @@ if [[ $do_index == true ]] ; then
 		1>&2 2>> "$logfile"; } 1>&2 2>>"$timinglogfile"
 		else
 		echo "$(date)	Start indexing on target region..."| tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM index \
 			--siteVCF $candidateVCF \
 			--dbsnpVCF $dbSNP \
@@ -446,7 +446,7 @@ if [[ $do_index == true ]] ; then
 
       if [[ -f "$indexPrefix.FASTQuick.fa.bed.phase3.vcf.gz" ]] && [[ ! -f "$indexPrefix.FASTQuick.fa.bed.phase3.vcf.gz.UD" ]]; then
         echo "$(date)	Extract subset of genotype matrix finished"| tee -a "$timinglogfile"
-        { /usr/bin/time \
+        { time \
           $FASTQuick_PROGRAM pop+con \
           --RefVCF ${indexPrefix}.FASTQuick.fa.bed.phase3.vcf.gz \
           --Reference $reference \
@@ -471,7 +471,7 @@ if [[ $do_align == true ]] ; then
 	echo "$(date)	Start analyzing fastq files..." | tee -a "$timinglogfile"
 	if [[ "$fastqList" != "" ]] && [[ -f $fastqList ]] ; then
 	  echo "$(date)	Align fastq files in list: $fastqList" | tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM align \
 			--index_prefix $indexPrefix \
 			--fq_list $fastqList \
@@ -481,7 +481,7 @@ if [[ $do_align == true ]] ; then
 		1>&2 2>> "$logfile"; } 1>&2 2>>"$timinglogfile"
 	elif [[ "$fastq_1" != "" ]] && [[ -f $fastq_1 ]] ; then
 		  echo "$(date)	Align fastq file: $fastq_1 and $fastq_2" | tee -a "$timinglogfile"
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM align \
 			--index_prefix $indexPrefix \
 			--fastq_1 $fastq_1 \
@@ -512,7 +512,7 @@ fi
 if [[ $do_cont_anc == true ]] ; then
 	echo "$(date)	Start estimating contamination and genetic ancestry..." | tee -a "$timinglogfile"
 	if [[ -f "${indexPrefix}.FASTQuick.fa.bed.phase3.vcf.gz.UD" ]] ; then
-		{ /usr/bin/time \
+		{ time \
 			$FASTQuick_PROGRAM pop+con \
 			--BamFile ${outputPrefix}.sorted.bam \
 			--Reference $reference \
@@ -530,14 +530,14 @@ fi
 
 if [[ $do_viz == true ]] ; then
 echo "$(date)	Visualize QC statistics..." | tee -a "$timinglogfile"
-{ /usr/bin/time \
+{ time \
 	Rscript ${FASTQuick_BIN_DIR}/RPlotScript.R \
 	${outputPrefix} \
 	${indexPrefix}.FASTQuick.fa.bed.phase3.vcf.gz \
 	${FASTQuick_SRC_DIR} \
 1>&2 2>> "$logfile"; } 1>&2 2>>"$timinglogfile"
   outputDir=$(dirname ${outputPrefix})
-{ /usr/bin/time \
+{ time \
 	Rscript -e "rmarkdown::render('${FASTQuick_BIN_DIR}/FinalReport.rmd', params=list(input = '${outputPrefix}', SVDPrefix = '${indexPrefix}.FASTQuick.fa.bed.phase3.vcf.gz', FASTQuickInstallDir = '${FASTQuick_SRC_DIR}'), output_dir = '$outputDir')"
 	1>&2 2>> "$logfile";} 1>&2 2>>"$timinglogfile"
 	mv $outputDir/FinalReport.html ${outputPrefix}.FinalReport.html
