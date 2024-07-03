@@ -319,24 +319,24 @@ kable(fastq.tbl, caption="FASTQ List Table")
 ```
 
 ## Data Production by FASTQ file
-```{r DataProduction}
+```{r DataProduction, warning=FALSE}
 sequence.tbl = read.csv(file=paste0(input,".Sequence.csv"),header=T)
 kable(sequence.tbl, caption="Data Production Table")
 ```
 
 ## Depth Distribution
-```{r Depth Distribution, fig.align = "center"}
+```{r Depth Distribution, fig.align = "center", warning=FALSE}
 multiplot(q1,q2,q3,q4, cols=2)
 ```
 
 ## Summary Statistics
-```{r summary}
+```{r summary, warning=FALSE}
 summary.tbl = read.table(file=paste0(input,".Summary"),header=T, sep=':')
 kable(summary.tbl, caption="Summary Statistics")
 ```
 
 ## Summary Plot
-```{r Misc, fig.align = "center"}
+```{r Misc, fig.align = "center", warning=FALSE}
 multiplot(q5,q7,q6,q8,cols=2)
 ```
 
